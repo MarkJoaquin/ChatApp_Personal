@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>miduChat</title>
+
+    <script type="module">
+      import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+
+      const getUsername = async () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+          console.log(`User existed ${username}`);
+          return username;
+        }
+
+        const res = await fetch(
+          "https://random-data-api.com/api/users/random_user"
+        );
+        const { username: randomUsername } = await res.json();
+
+        localStorage.setItem("username", randomUsername);
+        return randomUsername;
+      };
+
+      const socket = io({
+        auth: {
+          username: await getUsername(),
+          serverOffset: 0,
+        },
+      });
+
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const imageInput = document.getElementById("imageInput");
+      const messages = document.getElementById("messages");
+
+      // Mostrar mensaje de texto
+      socket.on("chat message", (msg, serverOffset, username) => {
+        const item = `<li>
+          <small>Sended by: ${username}</small>
+          <p>${msg}</p>
+        </li>`;
+        messages.insertAdjacentHTML("beforeend", item);
+        socket.auth.serverOffset = serverOffset;
+        messages.scrollTop = messages.scrollHeight; // Scroll automático
+      });
+
+      // Enviar mensaje de texto
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
+
+      // Enviar imagen
+      const allowedFormat = ["image/png", "image/jpeg", "image/jpg"];
+      imageInput.addEventListener("change", () => {
+        const file = imageInput.files[0];
+        if (file) {
+          if (!allowedFormat.includes(file.type)) {
+            alert("Formato no permitido. Solo PNG, JPG o JPEG.");
+            imageInput.value = "";
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            socket.emit("chat-image", reader.result); // Enviar imagen en Base64
+            imageInput.value = ""; // Limpiar input
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Mostrar imagen
+      socket.on("chat-image", (data, id, username) => {
+        const item = `<li>
+          <small>Sended by: ${username}</small>
+          <img src="${data}" alt="Imagen de ${username}" style="max-width: 60%; max-height: 400px; display: block; border-radius: 4px; margin: 4px 0;" />
+        </li>`;
+        messages.insertAdjacentHTML("beforeend", item);
+        messages.scrollTop = messages.scrollHeight; // Scroll automático
+      });
+    </script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000;
+        color: #fff;
+      }
+      #chat {
+        width: 100%;
+        max-width: 400px;
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #messages {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        flex-grow: 1;
+        height: 600px;
+      }
+      #messages > li {
+        padding: 8px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        background: #222;
+        word-wrap: break-word;
+      }
+      #messages > li img {
+        max-width: 100%;
+        border: 1px solid #333;
+      }
+      #form {
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        background: #111;
+      }
+      #input {
+        flex-grow: 1;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #333;
+        background: #222;
+        color: #fff;
+      }
+      #form > button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+      }
+      #form > button:hover {
+        background-color: #0056b3;
+      }
+      #imageInput {
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section id="chat">
+      <ul id="messages"></ul>
+      <form id="form">
+        <input
+          type="text"
+          id="input"
+          placeholder="Send a message..."
+          autocomplete="off"
+        />
+        <button type="submit">Enviar</button>
+        <input type="file" id="imageInput" accept=".png, .jpeg, .jpg" />
+      </form>
+    </section>
+  </body>
+</html>
