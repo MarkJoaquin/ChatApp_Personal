@@ -1,0 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: #0e1320;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+img,
+video,
+svg {
+  height: auto;
+  max-width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 1em;
+}
+
+/* ------------------------------------------------------------------------ */
+/* NAV BAR */
+nav {
+  background-color: #0e1320;
+  color: #edf2f7;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  padding: 1em 0;
+}
+nav .navContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1.5em;
+  gap: 2em;
+}
+nav .navContainer .homeImg {
+  display: flex;
+}
+nav .navContainer img {
+  display: flex;
+  width: 3em;
+  height: auto;
+  border-radius: 50%;
+}
+nav .navContainer .option {
+  display: flex;
+  align-items: center;
+}
+nav .navContainer .option ul {
+  display: flex;
+  list-style-type: none;
+  gap: 2em;
+  padding: 0;
+}
+nav .navContainer .option ul li a {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  text-decoration: none;
+  color: #edf2f7;
+}
+
+/* ------------------------------------------------------------------------ */
+/* First Content */
+main {
+  width: 100%;
+  display: grid;
+  /*   grid-template-columns: 1fr 1fr 1fr 0.5fr; */
+  grid-template-columns: repeat(3, 1fr) 0.5fr;
+  grid-template-areas: "title title photo photo" "title title photo photo" "downArrow downArrow downArrow downArrow";
+  background-color: #0e1320;
+  padding-top: 10em;
+}
+main img {
+  width: 2.5em;
+}
+main .downArrow {
+  display: flex;
+  justify-content: center;
+  width: 2em;
+  background-color: #0e1320;
+}
+
+#title {
+  grid-area: title;
+  background-color: #0e1320;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #edf2f7;
+  padding: 9em 0 9em 18em;
+  display: inline;
+}
+#title p:first-child {
+  font-size: 2.5em;
+  font-weight: 500;
+}
+#title p:nth-child(2) {
+  font-size: 3.5em;
+  font-weight: 500;
+}
+#title p:nth-child(3) {
+  padding: 2em 0;
+  color: #a0aec0;
+  max-width: 70%;
+  font-size: 1.2em;
+}
+#title .iconsAndButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+#title .iconsAndButton .icons a {
+  margin: 0.5em;
+}
+#title .iconsAndButton .resumeDownloadButton {
+  text-decoration: none;
+}
+#title .iconsAndButton .resumeDownloadButton .downloadButton {
+  border: #1b45b1 0.2em solid;
+  padding: 0.5em 1.6em;
+  border-radius: 50em;
+}
+#title .iconsAndButton .resumeDownloadButton .downloadButton .button {
+  color: #edf2f7;
+  border: none;
+  background-color: transparent;
+  font-size: 1.4em;
+  padding-right: 0.2em;
+}
+#title .iconsAndButton .resumeDownloadButton .downloadButton .downloadIcon {
+  height: 1.4em;
+  width: 1.4em;
+}
+#title .iconsAndButton .downloadButton:hover * {
+  cursor: pointer;
+}
+
+#photo {
+  grid-area: photo;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0e1320;
+  margin-right: 10em;
+}
+#photo img {
+  width: 30em;
+  border-radius: 70%;
+  padding-right: 20%;
+}
+
+#downArrow {
+  grid-area: downArrow;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 2em;
+}/*# sourceMappingURL=styles.css.map */
